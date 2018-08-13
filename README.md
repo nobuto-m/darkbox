@@ -24,3 +24,7 @@ password=$NOIP_PASSWORD
 $NOIP_HOSTNAME
 EOF
 ```
+
+resize /
+
+    sudo lvresize /dev/ubuntu-vg/ubuntu-lv -L 80G --resizefs -v
