@@ -107,3 +107,6 @@ cat <<EOF | lxc profile set default user.user-data "$(cat /dev/stdin)"
 #cloud-config
 apt_proxy: http://squid-deb-proxy.lxd:8000/
 EOF
+
+sudo snap install juju --classic
+juju bootstrap --model-default apt-http-proxy="http://squid-deb-proxy.lxd:8000/" localhost
