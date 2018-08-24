@@ -110,3 +110,39 @@ EOF
 
 sudo snap install juju --classic
 juju bootstrap --model-default apt-http-proxy="http://squid-deb-proxy.lxd:8000/" localhost
+
+
+lxc profile create juju-openstack
+
+cat <<EOF | lxc profile edit juju-openstack
+name: juju-default
+config:
+  boot.autostart: "true"
+  security.nesting: "true"
+  security.privileged: "true"
+  linux.kernel_modules: openvswitch,nbd,ip_tables,ip6_tables
+devices:
+  eth0:
+    name: eth0
+    nictype: bridged
+    parent: lxdbr0
+    type: nic
+  eth1:
+    name: eth1
+    nictype: bridged
+    parent: lxdbr0
+    type: nic
+  kvm:
+    path: /dev/kvm
+    type: unix-char
+  mem:
+    path: /dev/mem
+    type: unix-char
+  root:
+    path: /
+    type: disk
+    pool: default
+  tun:
+    path: /dev/net/tun
+    type: unix-char
+EOF
