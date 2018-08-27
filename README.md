@@ -109,6 +109,7 @@ apt_proxy: http://squid-deb-proxy.lxd:8000/
 EOF
 
 sudo snap install juju --classic
+sudo snap install juju-wait --classic
 juju bootstrap --model-default apt-http-proxy="http://squid-deb-proxy.lxd:8000/" localhost
 
 
