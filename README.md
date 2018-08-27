@@ -110,6 +110,7 @@ EOF
 
 sudo snap install juju --classic
 sudo snap install juju-wait --classic
+sudo snap install juju-crashdump --classic
 juju bootstrap --model-default apt-http-proxy="http://squid-deb-proxy.lxd:8000/" localhost
 
 
