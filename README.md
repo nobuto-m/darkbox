@@ -27,19 +27,16 @@ EOF
 
 resize /
 
-    sudo lvresize /dev/ubuntu-vg/ubuntu-lv -L 80G --resizefs -v
+    sudo lvresize /dev/ubuntu-vg/ubuntu-lv -L 8G --resizefs -v
 
 
 LXD setup
 
-    sudo apt install thin-provisioning-tools
-
-    sudo lvcreate -L 300G --thin --discard nopassdown ubuntu-vg -n LXDThinPool
-
 ```
+sudo apt install thin-provisioning-tools
+sudo lvcreate -L 300G --thin ubuntu-vg -n LXDThinPool
+
 cat <<EOF | sudo lxd init --preseed
-config:
-  images.auto_update_interval: "0"
 cluster: null
 networks:
 - config:
@@ -76,6 +73,9 @@ profiles:
 EOF
 ```
 
+squid-deb-proxy container
+
+```
 cat <<EOF | lxc init ubuntu:bionic --config=user.user-data="$(cat /dev/stdin)" squid-deb-proxy
 #cloud-config
 
@@ -86,8 +86,14 @@ packages:
 write_files:
   - content: |
       ppa.launchpad.net
+
+      ## apt-add-repository
+      launchpad.net
+      keyserver.ubuntu.com
+
       images.maas.io
       artifacts.elastic.co
+
     owner: root:root
     path: /etc/squid-deb-proxy/mirror-dstdomain.acl.d/50-thirdparty
     permissions: '0644'
@@ -95,26 +101,38 @@ write_files:
 run_cmd:
   - service squid-deb-proxy restart
 EOF
+```
 
+static ip for squid-deb-proxy and launch
 
-
+```
 lxc network attach lxdbr0 squid-deb-proxy eth0 eth0
 lxc config device set squid-deb-proxy eth0 ipv4.address 10.0.9.2
 
 lxc start squid-deb-proxy
+```
 
+apply squid-deb-proxy globally
+
+```
 cat <<EOF | lxc profile set default user.user-data "$(cat /dev/stdin)"
 #cloud-config
 apt_proxy: http://squid-deb-proxy.lxd:8000/
 EOF
+```
 
+Juju
+```
 sudo snap install juju --classic
 sudo snap install juju-wait --classic
 sudo snap install juju-crashdump --classic
 sudo snap install openstackclients --classic
 juju bootstrap --model-default apt-http-proxy="http://squid-deb-proxy.lxd:8000/" localhost
+```
 
+juju-openstack model profile
 
+```
 lxc profile create juju-openstack
 
 cat <<EOF | lxc profile edit juju-openstack
@@ -125,6 +143,10 @@ config:
   security.privileged: "true"
   linux.kernel_modules: openvswitch,nbd,ip_tables,ip6_tables
 devices:
+  root:
+    path: /
+    pool: default
+    type: disk
   eth0:
     name: eth0
     nictype: bridged
@@ -141,11 +163,8 @@ devices:
   mem:
     path: /dev/mem
     type: unix-char
-  root:
-    path: /
-    type: disk
-    pool: default
   tun:
     path: /dev/net/tun
     type: unix-char
 EOF
+```
