@@ -1,3 +1,9 @@
+sudoers with nopasswd since it's just a testbed
+
+cat <<EOF | sudo tee /etc/sudoers.d/99-local
+$USER ALL=(ALL) NOPASSWD:ALL
+EOF
+
 
 add universe back, and set security.ubuntu.com, LP: #1783129
 
