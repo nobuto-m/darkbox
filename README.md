@@ -174,3 +174,21 @@ devices:
     type: unix-char
 EOF
 ```
+
+
+mirror
+
+sudo apt install apt-mirror
+
+cat <<EOF | sudo tee /etc/apt/mirror.list
+set nthreads 5
+set mirror_path /srv/mirror
+
+deb http://archive.ubuntu.com/ubuntu bionic main restricted universe multiverse
+deb http://archive.ubuntu.com/ubuntu bionic-security main restricted universe multiverse
+deb http://archive.ubuntu.com/ubuntu bionic-updates main restricted universe multiverse
+deb http://archive.ubuntu.com/ubuntu bionic-proposed main restricted universe multiverse
+deb http://archive.ubuntu.com/ubuntu bionic-backports main restricted universe multiverse
+
+clean http://archive.ubuntu.com/ubuntu
+EOF
