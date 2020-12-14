@@ -1,47 +1,53 @@
-sudoers with nopasswd since it's just a testbed
+## Install
 
-cat <<EOF | sudo tee /etc/sudoers.d/99-local
+Install Ubuntu Server with the latest LTS (focal, 20.04 as of writing).
+https://releases.ubuntu.com/focal/
+
+With:
+- The default storage layout, "Use an entire disk" and "Set up this disk as an LVM group".
+- Install OpenSSH server and import a key.
+
+## Packages
+
+Install the following packages:
+```
+anacron
+avahi-daemon
+etckeeper
+libvirt-daemon-system
+uvtool-libvirt
+```
+
+## Configuration
+
+### LVM
+
+Extend the root LV to use the entire drive, LP: #1785321 and LP: #1893276.
+
+```bash
+$ sudo lvresize /dev/ubuntu-vg/ubuntu-lv -l +100%FREE --resizefs -v
+```
+
+### sudoers
+
+Set up `NOPASSWD` since it's a testbed.
+
+```bash
+$ cat <<EOF | sudo tee /etc/sudoers.d/99-local
 $USER ALL=(ALL) NOPASSWD:ALL
 EOF
-
-
-add universe back, and set security.ubuntu.com, LP: #1783129
-
-    sudo sed -i -e 's/ main$/\0 universe/' /etc/apt/sources.list
-    sudo sed -i -e 's|//.*\(/ubuntu .*-security \)|//security.ubuntu.com\1|' /etc/apt/sources.list
-
-
-ddclient
-
-    sudo apt install ddclient
-
-```
-NOIP_USERNAME=
-NOIP_PASSWORD=
-NOIP_HOSTNAME=
-
-cat <<EOF | sudo tee /etc/ddclient.conf
-use=web
-ssl=yes
-
-protocol=noip
-login=$NOIP_USERNAME
-password=$NOIP_PASSWORD
-$NOIP_HOSTNAME
-EOF
 ```
 
-resize /
+### LXD
 
-    sudo lvresize /dev/ubuntu-vg/ubuntu-lv -L 8G --resizefs -v
+Use the latest stable one instead of pre-installed one.
 
+```bash
+$ sudo snap refresh --channel latest/stable lxd
+```
 
-LXD setup
 
 ```
-sudo apt install thin-provisioning-tools
-sudo lvcreate -L 300G --thin ubuntu-vg -n LXDThinPool
-
 cat <<EOF | sudo lxd init --preseed
 cluster: null
 networks:
@@ -54,22 +60,19 @@ networks:
   managed: true
   name: lxdbr0
   type: ""
+  project: default
 storage_pools:
-- config:
-    source: ubuntu-vg
-    lvm.thinpool_name: LXDThinPool
-    volume.block.mount_options: noatime,nobarrier,data=writeback
+- config: {}
   description: ""
   name: default
-  driver: lvm
+  driver: dir
 profiles:
 - config: {}
   description: ""
   devices:
     eth0:
       name: eth0
-      nictype: bridged
-      parent: lxdbr0
+      network: lxdbr0
       type: nic
     root:
       path: /
@@ -82,7 +85,7 @@ EOF
 squid-deb-proxy container
 
 ```
-cat <<EOF | lxc init ubuntu:bionic --config=user.user-data="$(cat /dev/stdin)" squid-deb-proxy
+cat <<EOF | lxc init ubuntu:focal --config=user.user-data="$(cat /dev/stdin)" squid-deb-proxy
 #cloud-config
 
 packages:
