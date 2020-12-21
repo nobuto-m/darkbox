@@ -18,6 +18,11 @@ libvirt-daemon-system
 uvtool-libvirt
 ```
 
+### Third-party
+
+https://tailscale.com/download/linux/ubuntu-2004
+
+
 ## Configuration
 
 ### LVM
