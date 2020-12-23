@@ -43,6 +43,27 @@ $USER ALL=(ALL) NOPASSWD:ALL
 EOF
 ```
 
+### Wake on LAN
+
+Enable Wake on LAN explicitly since `WakeOnLan=` in systemd.link is off
+by default.
+
+```diff
+diff --git a/netplan/00-installer-config.yaml b/netplan/00-installer-config.yaml
+index dea791e..68f62ea 100644
+--- a/netplan/00-installer-config.yaml
++++ b/netplan/00-installer-config.yaml
+@@ -2,5 +2,8 @@
+ network:
+   ethernets:
+     enp31s0:
++      match:
++        macaddress: 70:85:c2:ae:bc:08
+       dhcp4: true
++      wakeonlan: true
+   version: 2
+```
+
 ### LXD
 
 Use the latest stable one instead of pre-installed one.
