@@ -16,6 +16,7 @@ avahi-daemon
 etckeeper
 libvirt-daemon-system
 uvtool-libvirt
+prometheus-node-exporter
 ```
 
 ### Third-party
