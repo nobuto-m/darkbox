@@ -151,7 +151,7 @@ lxc start squid-deb-proxy
 apply squid-deb-proxy globally
 
 ```
-cat <<EOF | lxc profile set default user.user-data "$(cat /dev/stdin)"
+cat <<EOF | lxc profile set default user.vendor-data "$(cat /dev/stdin)"
 #cloud-config
 apt_proxy: http://squid-deb-proxy.lxd:8000/
 EOF
