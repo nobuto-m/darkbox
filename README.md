@@ -158,3 +158,33 @@ cat <<EOF | lxc profile set default user.vendor-data "$(cat /dev/stdin)"
 apt_proxy: http://squid-deb-proxy.lxd:8000/
 EOF
 ```
+
+
+### Wireguard
+
+cat <<EOF | sudo install -m 0600 /dev/stdin /etc/wireguard/wg0.conf
+[Interface]
+Address = 192.168.2.1/24
+ListenPort = 51820
+PrivateKey = $(wg genkey)
+
+#[Peer]
+#PublicKey = 
+#AllowedIPs = 192.168.2.2/32
+EOF
+
+sudo systemctl enable --now wg-quick@wg0.service
+
+
+### client side
+
+cat <<EOF | sudo install -m 0600 /dev/stdin /etc/wireguard/wg0.conf
+[Interface]
+Address = 192.168.2.2/24
+PrivateKey = $(wg genkey)
+
+#[Peer]
+#Endpoint = darkbox.local:51820
+#PublicKey = 
+#AllowedIPs = 192.168.2.1/32, 10.0.9.0/24, 192.168.151.0/24
+EOF
