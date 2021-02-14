@@ -17,6 +17,7 @@ etckeeper
 libvirt-daemon-system
 uvtool-libvirt
 prometheus-node-exporter
+wireguard-tools
 ```
 
 ### Third-party
