@@ -35,6 +35,17 @@ Extend the root LV to use the entire drive, LP: #1785321 and LP: #1893276.
 $ sudo lvresize /dev/ubuntu-vg/ubuntu-lv -l +100%FREE --resizefs -v
 ```
 
+### Swap
+
+Extend the size of swapfile to be ready for overcommitting memory for VMs.
+
+```bash
+$ sudo swapoff -a
+$ sudo dd if=/dev/zero of=/swap.img bs=1G count=64 oflag=sync
+$ sudo mkswap /swap.img
+$ sudo swapon -a
+```
+
 ### sudoers
 
 Set up `NOPASSWD` since it's a testbed.
