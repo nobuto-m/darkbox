@@ -168,3 +168,11 @@ apt:
   proxy: http://squid-deb-proxy.lxd:8000/
 EOF
 ```
+
+### Cockpit
+
+```bash
+$ sudo apt install cockpit
+$ sudo apt autoremove --purge network-manager wpasupplicant
+$ sudo apt upgrade -t jammy-backports
+```
