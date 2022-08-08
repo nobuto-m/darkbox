@@ -1,10 +1,12 @@
 ## Install
 
-Install Ubuntu Server with the latest LTS (focal, 20.04 as of writing).
-https://releases.ubuntu.com/focal/
+Install Ubuntu Server with the latest LTS (focal, 22.04 as of writing).
+https://releases.ubuntu.com/jammy/
 
 With:
-- The default storage layout, "Use an entire disk" and "Set up this disk as an LVM group".
+- The default storage layout
+  - Check "Use an entire disk"
+  - Uncheck "Set up this disk as an LVM group".
 - Install OpenSSH server and import a key.
 
 ## Packages
@@ -22,18 +24,9 @@ wireguard-tools
 
 ### Third-party
 
-https://tailscale.com/download/linux/ubuntu-2004
-
+https://tailscale.com/download/
 
 ## Configuration
-
-### LVM
-
-Extend the root LV to use the entire drive, LP: #1785321 and LP: #1893276.
-
-```bash
-$ sudo lvresize /dev/ubuntu-vg/ubuntu-lv -l +100%FREE --resizefs -v
-```
 
 ### Swap
 
@@ -41,7 +34,7 @@ Extend the size of swapfile to be ready for overcommitting memory for VMs.
 
 ```bash
 $ sudo swapoff -a
-$ sudo dd if=/dev/zero of=/swap.img bs=1G count=64 oflag=sync
+$ sudo dd if=/dev/zero of=/swap.img bs=1G count=32 status=progress oflag=sync
 $ sudo mkswap /swap.img
 $ sudo swapon -a
 ```
@@ -63,10 +56,10 @@ by default.
 
 ```diff
 diff --git a/netplan/00-installer-config.yaml b/netplan/00-installer-config.yaml
-index dea791e..68f62ea 100644
+index 9782a96..351b09c 100644
 --- a/netplan/00-installer-config.yaml
 +++ b/netplan/00-installer-config.yaml
-@@ -2,5 +2,8 @@
+@@ -2,7 +2,10 @@
  network:
    ethernets:
      enp31s0:
@@ -74,6 +67,8 @@ index dea791e..68f62ea 100644
 +        macaddress: 70:85:c2:ae:bc:08
        dhcp4: true
 +      wakeonlan: true
+     #enp35s0:
+     #  dhcp4: true
    version: 2
 ```
 
@@ -124,7 +119,10 @@ EOF
 squid-deb-proxy container
 
 ```
-cat <<EOF | lxc init ubuntu:focal --config=user.user-data="$(cat /dev/stdin)" squid-deb-proxy
+cat <<EOF | lxc init "ubuntu:$(lsb_release -sc)" \
+    --config=boot.autostart=true \
+    --config=user.user-data="$(cat /dev/stdin)" \
+    squid-deb-proxy
 #cloud-config
 
 packages:
@@ -166,36 +164,7 @@ apply squid-deb-proxy globally
 ```
 cat <<EOF | lxc profile set default user.vendor-data "$(cat /dev/stdin)"
 #cloud-config
-apt_proxy: http://squid-deb-proxy.lxd:8000/
+apt:
+  proxy: http://squid-deb-proxy.lxd:8000/
 EOF
 ```
-
-
-### Wireguard
-
-cat <<EOF | sudo install -m 0600 /dev/stdin /etc/wireguard/wg0.conf
-[Interface]
-Address = 192.168.2.1/24
-ListenPort = 51820
-PrivateKey = $(wg genkey)
-
-#[Peer]
-#PublicKey = 
-#AllowedIPs = 192.168.2.2/32
-EOF
-
-sudo systemctl enable --now wg-quick@wg0.service
-
-
-### client side
-
-cat <<EOF | sudo install -m 0600 /dev/stdin /etc/wireguard/wg0.conf
-[Interface]
-Address = 192.168.2.2/24
-PrivateKey = $(wg genkey)
-
-#[Peer]
-#Endpoint = darkbox.local:51820
-#PublicKey = 
-#AllowedIPs = 192.168.2.1/32, 10.0.9.0/24, 192.168.151.0/24
-EOF
