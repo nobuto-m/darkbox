@@ -49,6 +49,24 @@ $USER ALL=(ALL) NOPASSWD:ALL
 EOF
 ```
 
+### Git prompt
+
+Add the following lines to `~/.bashrc`
+
+```bash
+HISTSIZE=10000
+HISTFILESIZE=20000
+
+GIT_PS1_SHOWDIRTYSTATE=true
+GIT_PS1_SHOWSTASHSTATE=true
+GIT_PS1_SHOWUNTRACKEDFILES=true
+GIT_PS1_SHOWUPSTREAM='auto'
+GIT_PS1_SHOWCOLORHINTS=true
+GIT_PS1__BASE="${PS1%\$*}"
+GIT_PS1__BASE="${GIT_PS1__BASE%\\}"
+PROMPT_COMMAND='__git_ps1 "${GIT_PS1__BASE}" "\$ "; history -a'
+```
+
 ### Wake on LAN
 
 Enable Wake on LAN explicitly since `WakeOnLan=` in systemd.link is off
