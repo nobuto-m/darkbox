@@ -150,6 +150,9 @@ packages:
 write_files:
   - content: |
       ppa.launchpad.net
+      ppa.launchpadcontent.net
+
+      esm.ubuntu.com
 
       ## apt-add-repository
       launchpad.net
