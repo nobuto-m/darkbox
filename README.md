@@ -1,5 +1,7 @@
 ## Install
 
+Make sure BIOS has `AC Power Recovery: On`.
+
 Install Ubuntu Server with the latest LTS (focal, 22.04 as of writing).
 https://releases.ubuntu.com/jammy/
 
