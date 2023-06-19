@@ -1,6 +1,7 @@
 ## Install
 
-Make sure BIOS has `AC Power Recovery: On`.
+Make sure BIOS has `Restore on AC Power Loss: Power On` to cooperate
+with a smart plug.
 
 Install Ubuntu Server with the latest LTS (focal, 22.04 as of writing).
 https://releases.ubuntu.com/jammy/
