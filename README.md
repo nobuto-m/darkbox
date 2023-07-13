@@ -29,6 +29,10 @@ wireguard-tools
 
 https://tailscale.com/download/
 
+```bash
+sudo tailscale up --advertise-exit-node --advertise-routes 10.0.9.0/24,192.168.123.0/24
+```
+
 ## Configuration
 
 ### Swap
@@ -91,6 +95,18 @@ index 9782a96..351b09c 100644
      #enp35s0:
      #  dhcp4: true
    version: 2
+```
+
+### Libvirt
+
+Edit the default network and use `192.168.123.0/24` instead of `192.168.122.0/24`.
+
+```
+virsh net-destroy default
+
+virsh net-edit default
+
+virsh net-start default
 ```
 
 ### LXD
