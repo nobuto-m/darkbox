@@ -56,6 +56,14 @@ $USER ALL=(ALL) NOPASSWD:ALL
 EOF
 ```
 
+### exporters
+
+Edit `/etc/default/prometheus-node-exporter` and restart it to enable statistics from /proc.
+
+```bash
+ARGS="--collector.processes"
+```
+
 ### Git prompt
 
 Add the following lines to `~/.bashrc`
