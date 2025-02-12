@@ -30,7 +30,7 @@ wireguard-tools
 https://tailscale.com/download/
 
 ```bash
-sudo tailscale up --advertise-exit-node --advertise-routes 10.0.9.0/24,192.168.123.0/24
+sudo tailscale up --advertise-exit-node --advertise-routes 10.0.9.0/24,192.168.123.0/24,192.168.124.0/24
 ```
 
 ## Configuration
