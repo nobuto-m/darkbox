@@ -3,8 +3,8 @@
 Make sure BIOS has `Restore on AC Power Loss: Power On` to cooperate
 with a smart plug.
 
-Install Ubuntu Server with the latest LTS (focal, 22.04 as of writing).
-https://releases.ubuntu.com/jammy/
+Install Ubuntu Server with the latest LTS (noble, 24.04 as of writing).
+https://releases.ubuntu.com/noble/
 
 With:
 - The default storage layout
@@ -95,12 +95,12 @@ index 9782a96..351b09c 100644
 @@ -2,7 +2,10 @@
  network:
    ethernets:
-     enp31s0:
+     enp5s0:
 +      match:
 +        macaddress: 70:85:c2:ae:bc:08
        dhcp4: true
 +      wakeonlan: true
-     #enp35s0:
+     #enp7s0:
      #  dhcp4: true
    version: 2
 ```
@@ -136,7 +136,6 @@ networks:
     ipv4.dhcp.ranges: 10.0.9.51-10.0.9.200
     ipv6.address: none
   description: ""
-  managed: true
   name: lxdbr0
   type: ""
   project: default
@@ -215,12 +214,4 @@ cat <<EOF | lxc profile set default user.vendor-data "$(cat /dev/stdin)"
 apt:
   proxy: http://squid-deb-proxy.lxd:8000/
 EOF
-```
-
-### Cockpit
-
-```bash
-$ sudo apt install cockpit
-$ sudo apt autoremove --purge network-manager wpasupplicant
-$ sudo apt upgrade -t jammy-backports
 ```
