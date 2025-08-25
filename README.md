@@ -1,7 +1,9 @@
 ## Install
 
-Make sure BIOS has `Restore on AC Power Loss: Power On` to cooperate
-with a smart plug.
+Make sure BIOS has:
+- `Restore on AC Power Loss: Power On` to cooperate
+with a smart plug
+- `PCIE Devices Power On: Enabled` to use Wake-on-LAN
 
 Install Ubuntu Server with the latest LTS (noble, 24.04 as of writing).
 https://releases.ubuntu.com/noble/
