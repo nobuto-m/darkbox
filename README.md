@@ -177,11 +177,11 @@ packages:
 
 write_files:
   - content: |
-      ppa.launchpad.net
-      ppa.launchpadcontent.net
-
       esm.ubuntu.com
       snapshot.ubuntu.com
+
+      ppa.launchpad.net
+      ppa.launchpadcontent.net
       snapshot.ppa.launchpadcontent.net
 
       ## apt-add-repository
@@ -189,7 +189,6 @@ write_files:
       keyserver.ubuntu.com
 
       images.maas.io
-      artifacts.elastic.co
 
     owner: root:root
     path: /etc/squid-deb-proxy/mirror-dstdomain.acl.d/50-thirdparty
