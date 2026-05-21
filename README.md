@@ -21,6 +21,7 @@ Install the following packages:
 anacron
 avahi-daemon
 etckeeper
+chrony
 libvirt-daemon-system
 uvtool-libvirt
 prometheus-node-exporter
