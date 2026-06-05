@@ -26,6 +26,7 @@ libvirt-daemon-system
 uvtool-libvirt
 prometheus-node-exporter
 wireguard-tools
+mosh
 ```
 
 ### Third-party
