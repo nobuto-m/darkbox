@@ -109,6 +109,19 @@ index 9782a96..351b09c 100644
    version: 2
 ```
 
+### Explicit link speed
+
+Create an override file as
+`/etc/systemd/network/10-netplan-enp7s0.link.d/override.conf` and drop
+the following content when specifying the explicit link speed.
+
+```bash
+[Link]
+BitsPerSecond=2.5G
+Duplex=full
+AutoNegotiation=no
+```
+
 ### Libvirt
 
 Edit the default network and use `192.168.123.0/24` instead of `192.168.122.0/24`.
